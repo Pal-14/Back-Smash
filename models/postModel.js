@@ -5,6 +5,8 @@ const PostSchema = mongoose.Schema({
   content: String,
   author: String,
   date: String,
+  time: String,
+  between: Number,
   likes: [{}],
 });
 

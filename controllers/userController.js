@@ -21,7 +21,7 @@ function readToken(req) {
 }
 
 const UserController = {
-  logBody(req, res, next) {
+/*   logBody(req, res, next) {
     console.log(req.body);
     next();
   },
@@ -31,7 +31,7 @@ const UserController = {
       return res.send(200);
     }
     return res.send(403);
-  },
+  }, */
 
   //Public Routes
 
@@ -103,11 +103,11 @@ const UserController = {
         if(user === null) {
           return res
           .status(403).send({ success: false, message: "Informations incorrectes"
-        })
+        });
         }
         let passwordDoMatch = bcrypt.compareSync(password, user.password);
         if(!passwordDoMatch) {
-          return res.status(400).send({
+          return res.status(401).send({
            
             success: false,
             message: "Informations de connexion Incorrectes"

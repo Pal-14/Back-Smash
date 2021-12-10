@@ -1,6 +1,6 @@
-var express = require("express");
+const express = require("express");
 const UserController = require("../controllers/userController");
-const Post = require('../controllers/postControllers')
+const Post = require('../controllers/postControllers');
 
 const Auth = require("../middlewares/authentification");
 
@@ -17,10 +17,12 @@ router.post("/signup", UserController.signup);
 
 router.post("/login", UserController.login);
 
-router.get("/check-token",Auth.isUser, UserController.getInfos);
+router.get("/check-token", Auth.isUser, UserController.getInfos); 
 
-router.post("/post-by-user",Auth.isUser,Post.createPost);
+router.post("/post-by-user", Auth.isUser, Post.createPost);
 
-router.get("/display-all-post",Post.showAllPosts)
+router.put("/like-post", Auth.isUser, Post.toggleLike)
+
+router.get("/display-all-post", Post.showAllPosts)
 
 module.exports = router;
