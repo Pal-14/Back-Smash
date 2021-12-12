@@ -3,6 +3,7 @@ const UserController = require("../controllers/userController");
 const Post = require('../controllers/postControllers');
 
 const Auth = require("../middlewares/authentification");
+const UploadMidlleware = require("../middlewares/uploads");
 
 var router = express.Router();
 
@@ -14,15 +15,15 @@ router.get("/", function (req, res, next) {
 router.get("/complete-listing", UserController.completeUserListing);
 
 router.post("/signup", UserController.signup);
-
 router.post("/login", UserController.login);
-
 router.get("/check-token", Auth.isUser, UserController.getInfos); 
 
+router.get("/display-all-post", Post.showAllPosts);
 router.post("/post-by-user", Auth.isUser, Post.createPost);
+router.put("/like-post", Auth.isUser, Post.toggleLike);
+router.post("/edit-profil-user", Auth.isUser, UploadMidlleware.uploadsPicsForProfile, UserController.stockUserDocument )
 
-router.put("/like-post", Auth.isUser, Post.toggleLike)
 
-router.get("/display-all-post", Post.showAllPosts)
+
 
 module.exports = router;

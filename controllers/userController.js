@@ -5,6 +5,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const UserModel = require("../models/userModel");
 const { findOne } = require("../models/userModel");
+const PostModel = require("../models/postModel");
+
 
 function handleServerError(err, res) {
   console.log("Une erreur est survenue", err);
@@ -147,6 +149,41 @@ const UserController = {
       .status(200)
       .send({ success: true, message: "Infos utilisateur", data: req.user });
   },
+
+  stockUserDocument(req, res, next) {
+    const myArray = req.myArray;
+    console.log(req.myArray,"array");
+    if (!myArray) {
+      return res
+        .status(400)
+        .send({
+          success: false,
+          message: "Champs néccessaires non renseignés",
+        });
+    }
+    return UserModel.findOneAndUpdate(
+      {user_id: req.user._id },
+      {
+        $push: {
+          "pictureUrl": myArray,
+        },
+      }
+    )
+      .then(() => {
+        res.status(200).send({
+          success: true,
+          message:
+            "Ok vos documents ont bien été envoyés. ",
+        });
+      })
+      .catch((err) => {
+        res.status(400).send({
+          success: false,
+          message: `Erreur : ${err}`,
+        });
+      });
+  },
+
 };
 
 module.exports = UserController;
