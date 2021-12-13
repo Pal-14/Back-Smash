@@ -72,7 +72,7 @@ const UserController = {
                   if (err) console.log(err);
                   console.log(token);
                   res.status(200).send({
-                    token,
+                    token: token,
                     success: true,
                     message: "Votre Compte à été créer avec Succés",
                   });
@@ -110,13 +110,14 @@ const UserController = {
         }
         let passwordDoMatch = bcrypt.compareSync(password, user.password);
         if (!passwordDoMatch) {
+          console.log(req);
           return res.status(401).send({
             success: false,
             message: "Informations de connexion Incorrectes",
           });
         }
         jwt.sign(
-          { _id: req.user._id },
+          { _id: user._id },
           JWT_SECRET,
           { expiresIn: "24h" },
           (err, token) => {
@@ -127,8 +128,8 @@ const UserController = {
               message: "Connecté avec succés",
             });
           }
-        );
-      })
+          );
+        })
 
       .catch((err) => handleServerError(err, res));
   },
