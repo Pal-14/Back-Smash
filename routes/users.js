@@ -4,6 +4,8 @@ const Post = require('../controllers/postControllers');
 
 const Auth = require("../middlewares/authentification");
 const UploadMidlleware = require("../middlewares/uploads");
+const UserModel = require("../models/userModel");
+const { uploadsPicsForProfile } = require("../middlewares/uploads");
 
 var router = express.Router();
 
@@ -18,12 +20,16 @@ router.post("/signup", UserController.signup);
 router.post("/login", UserController.login);
 router.get("/check-token", Auth.isUser, UserController.getInfos); 
 
+
+
+
 router.get("/display-all-post", Post.showAllPosts);
 router.post("/post-by-user", Auth.isUser, Post.createPost);
 router.put("/like-post", Auth.isUser, Post.toggleLike);
-router.post("/edit-profil-user", Auth.isUser, UploadMidlleware.uploadsPicsForProfile, UserController.stockUserDocument )
 
+router.put("/edit-user-description", Auth.isUser,UserController.editProfil)
 
+router.post("/upload", Auth.isUser, UploadMidlleware.uploadsPicsForProfile, UserController.stockUserDocument);
 
 
 module.exports = router;

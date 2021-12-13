@@ -4,9 +4,7 @@ const SALTS = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const UserModel = require("../models/userModel");
-const { findOne } = require("../models/userModel");
-const PostModel = require("../models/postModel");
-
+/* const { findOne } = require("../models/userModel"); */
 
 function handleServerError(err, res) {
   console.log("Une erreur est survenue", err);
@@ -23,7 +21,7 @@ function readToken(req) {
 }
 
 const UserController = {
-/*   logBody(req, res, next) {
+  /*   logBody(req, res, next) {
     console.log(req.body);
     next();
   },
@@ -73,7 +71,11 @@ const UserController = {
                 (err, token) => {
                   if (err) console.log(err);
                   console.log(token);
-                  res.status(200).send({ token, success:true, message: 'Votre Compte à été créer avec Succés' });
+                  res.status(200).send({
+                    token,
+                    success: true,
+                    message: "Votre Compte à été créer avec Succés",
+                  });
                 }
               );
             })
@@ -93,48 +95,43 @@ const UserController = {
     const password = userInfos.password;
 
     //si pas toutes les infos => renvoie 400
-     if (!email || !password) {
-      return res
-      .status(400)
-      .send({
+    if (!email || !password) {
+      return res.status(400).send({
         success: false,
-        message: "Merci de remplir tout les champs",})
-      }
-      return UserModel.findOne({ email : email })
-      .then((user)=> {
-        if(user === null) {
+        message: "Merci de remplir tout les champs",
+      });
+    }
+    return UserModel.findOne({ email: email })
+      .then((user) => {
+        if (user === null) {
           return res
-          .status(403).send({ success: false, message: "Informations incorrectes"
-        });
+            .status(403)
+            .send({ success: false, message: "Informations incorrectes" });
         }
         let passwordDoMatch = bcrypt.compareSync(password, user.password);
-        if(!passwordDoMatch) {
+        if (!passwordDoMatch) {
           return res.status(401).send({
-           
             success: false,
-            message: "Informations de connexion Incorrectes"
+            message: "Informations de connexion Incorrectes",
           });
+        }
+        jwt.sign(
+          { _id: user._id },
+          JWT_SECRET,
+          { expiresIn: "24h" },
+          (err, token) => {
+            if (err) console.log(err);
+            res.status(200).send({
+              token: token,
+              success: true,
+              message: "Connecté avec succés",
+            });
           }
-          jwt.sign(
-            {_id: user._id},
-            JWT_SECRET,
-            {expiresIn: "24h"},
-            (err, token)=> {
-              if(err)console.log(err);
-              res.status(200).send({
-                token: token,
-                success: true,
-                message: "Connecté avec succés",
-              });
-            }
-          );
-        })
-      
-      .catch((err)=>handleServerError(err,res))
-    },
-          
-    
-  
+        );
+      })
+
+      .catch((err) => handleServerError(err, res));
+  },
 
   completeUserListing(req, res, next) {
     UserModel.find({})
@@ -152,28 +149,25 @@ const UserController = {
 
   stockUserDocument(req, res, next) {
     const myArray = req.myArray;
-    console.log(req.myArray,"array");
+    console.log(req.myArray, "array");
     if (!myArray) {
-      return res
-        .status(400)
-        .send({
-          success: false,
-          message: "Champs néccessaires non renseignés",
-        });
+      return res.status(400).send({
+        success: false,
+        message: "Champs néccessaires non renseignés",
+      });
     }
     return UserModel.findOneAndUpdate(
-      {user_id: req.user._id },
+      { user_id: req.user._id },
       {
         $push: {
-          "pictureUrl": myArray,
+          pictureUrl: myArray,
         },
       }
     )
       .then(() => {
         res.status(200).send({
           success: true,
-          message:
-            "Ok vos documents ont bien été envoyés. ",
+          message: "Ok vos documents ont bien été envoyés. ",
         });
       })
       .catch((err) => {
@@ -184,6 +178,41 @@ const UserController = {
       });
   },
 
+  editProfil(req, res, next) {
+    let { userName, firstName, lastName, age, favoriteChar, description } =
+      req.body;
+    if (!description) {
+      return res.status(400).send({
+        success: false,
+        message: "Vous devez mettre une description",
+      });
+    }
+    return UserModel.updateOne(
+      { _id: req.user._id },
+      {
+        $set: {
+          userName,
+          lastName,
+          firstName,
+          age,
+          description,
+          favoriteChar,
+        },
+      }
+    )
+      .then(() => {
+        res.status(200).send({
+          success: true,
+          message: "description mise à jour",
+        });
+      })
+      .catch((err) => {
+        res.status(400).send({
+          success: false,
+          message: "Erreur ESMDEU01",
+        });
+      });
+  },
 };
 
 module.exports = UserController;
