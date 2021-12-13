@@ -116,7 +116,7 @@ const UserController = {
           });
         }
         jwt.sign(
-          { _id: user._id },
+          { _id: req.user._id },
           JWT_SECRET,
           { expiresIn: "24h" },
           (err, token) => {
