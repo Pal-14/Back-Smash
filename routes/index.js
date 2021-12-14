@@ -1,15 +1,15 @@
 const express = require("express");
-const router = express.Router();
+const indexRouter = express.Router();
 let path = require("path");
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
+indexRouter.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 
-router.get("/get-pic-profil/:name", function (req, res, next) {
+indexRouter.get("/get-pic-profil/:name", function (req, res, next) {
   let options = {
-    root: path.join("../public/uploads"),
+    root: path.join(__dirname, "../public/uploads"),//attention dirname = double underscore !!!!!!!!
     dotfiles: "deny",
     headers: {
       "x.timestamp": Date.now(),
@@ -27,4 +27,4 @@ router.get("/get-pic-profil/:name", function (req, res, next) {
   });
 });
 
-module.exports = router;
+module.exports = indexRouter;

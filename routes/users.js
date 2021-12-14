@@ -1,11 +1,11 @@
 const express = require("express");
 const UserController = require("../controllers/userController");
-const Post = require('../controllers/postControllers');
-
-const Auth = require("../middlewares/authentification");
 const UploadMidlleware = require("../middlewares/uploads");
+
+const Post = require('../controllers/postControllers');
+const Auth = require("../middlewares/authentification");
 const UserModel = require("../models/userModel");
-const { uploadsPicsForProfile } = require("../middlewares/uploads");
+
 
 var router = express.Router();
 

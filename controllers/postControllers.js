@@ -21,7 +21,7 @@ const post = {
       return res.status(400).send({ error: "Bad Request" });
     }
     // Const pour avoir la date au format JJ/MM/AAAA + Heures/Minutes/Secondes
-    // la ('0' + d.getminutes()).slice(-2); c'est pour avoir Exemple 11:02:34 et non pas 11:2:34
+    // le ('0' + d.getminutes()).slice(-2); c'est pour avoir Exemple 11:02:34 et non pas 11:2:34
     //cela récupère les dizaines même si c'est un 0.
     const d = new Date();
     const date =

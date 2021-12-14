@@ -168,7 +168,7 @@ const UserController = {
       .then(() => {
         res.status(200).send({
           success: true,
-          message: "Ok vos documents ont bien été envoyés. ",
+          message: "Votre photo à bien été enregistrée.",
         });
       })
       .catch((err) => {
