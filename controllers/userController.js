@@ -96,7 +96,7 @@ const UserController = {
 
     //si pas toutes les infos => renvoie 400
     if (!email || !password) {
-      return res.status(400).send({
+     return res.status(400).send({
         success: false,
         message: "Merci de remplir tout les champs",
       });
