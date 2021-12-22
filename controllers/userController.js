@@ -4,6 +4,7 @@ const SALTS = 10;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const UserModel = require("../models/userModel");
+const PostModel = require("../models/postModel");
 /* const { findOne } = require("../models/userModel"); */
 
 function handleServerError(err, res) {
@@ -21,8 +22,8 @@ function readToken(req) {
 }
 
 const UserController = {
-  /*   logBody(req, res, next) {
-    console.log(req.body);
+    logBody(req, res, next) {
+    console.log(req,'req.body');
     next();
   },
 
@@ -31,7 +32,7 @@ const UserController = {
       return res.send(200);
     }
     return res.send(403);
-  }, */
+  },
 
   //Public Routes
 
@@ -83,7 +84,7 @@ const UserController = {
         }
         return res.status(400).send({
           success: false,
-          message: "Email exists already",
+          message: "Email déjà utilisé"
         });
       })
       .catch((err) => handleServerError(err, res));
@@ -105,12 +106,11 @@ const UserController = {
       .then((user) => {
         if (user === null) {
           return res
-            .status(403)
-            .send({ success: false, message: "Informations incorrectes" });
+            .status(403).send({ success: false, message: "Informations incorrectes" });
         }
         let passwordDoMatch = bcrypt.compareSync(password, user.password);
         if (!passwordDoMatch) {
-          console.log(req);
+          /* console.log(req); */
           return res.status(401).send({
             success: false,
             message: "Informations de connexion Incorrectes",
@@ -148,20 +148,22 @@ const UserController = {
       .send({ success: true, message: "Infos utilisateur", data: req.user });
   },
 
-  stockUserDocument(req, res, next) {
-    const myArray = req.myArray;
-    console.log(req.myArray, "array");
-    if (!myArray) {
+ 
+
+  updateProfilePicOfUserPosts(req, res, next) {
+    let newProfilePic = req.myArray[0];
+    console.log(newProfilePic, "log new profile pic");
+    if (!newProfilePic) {
       return res.status(400).send({
         success: false,
-        message: "Champs néccessaires non renseignés",
+        message: "Pas de photo associée",
       });
     }
-    return UserModel.findOneAndUpdate(
-      { user_id: req.user._id },
+    return PostModel.updateMany(
+      { author: req.user.userName },
       {
-        $push: {
-          pictureUrl: myArray,
+        $set: {
+          authorProfilePicture: newProfilePic,
         },
       }
     )
@@ -180,7 +182,7 @@ const UserController = {
   },
 
   editProfil(req, res, next) {
-    let { userName, firstName, lastName, age, favoriteChar, description } =
+    let { userName, firstName, lastName, age, favoriteChar, description,pictureUrl } =
       req.body;
     if (!description) {
       return res.status(400).send({
@@ -197,6 +199,7 @@ const UserController = {
           firstName,
           age,
           description,
+          pictureUrl,
           favoriteChar,
         },
       }

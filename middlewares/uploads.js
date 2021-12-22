@@ -1,5 +1,6 @@
 let path = require("path");
 const multer = require("multer");
+const UserModel = require("../models/userModel");
 
 const publicFolderStorage = multer.diskStorage({
     destination: "./public/uploads",
@@ -55,6 +56,37 @@ const UploadMidlleware = {
       });
       next();
     });
+  },
+  stockUserDocument(req, res, next) {
+    const myArray = req.myArray;
+    console.log(req.myArray, "array");
+    if (!myArray) {
+      return res.status(400).send({
+        success: false,
+        message: "Champs néccessaires non renseignés",
+      });
+    }
+    return UserModel.findOneAndUpdate(
+      { _id: req.user._id },
+      {
+      $push: {
+        pictureUrl: myArray,
+      },
+      }
+    )
+      .then(() => {
+        res.status(200).send({
+          success: true,
+          message: "Votre photo à bien été enregistrée.",
+        });
+       next();
+      }) 
+      .catch((err) => {
+        res.status(400).send({
+          success: false,
+          message: `Erreur : ${err}`,
+        });
+      });
   },
 };
 

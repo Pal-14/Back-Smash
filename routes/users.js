@@ -29,7 +29,7 @@ router.put("/like-post", Auth.isUser, Post.toggleLike);
 
 router.put("/edit-user-description", Auth.isUser,UserController.editProfil)
 
-router.post("/upload", Auth.isUser, UploadMidlleware.uploadsPicsForProfile, UserController.stockUserDocument);
+router.post("/upload", Auth.isUser, UploadMidlleware.uploadsPicsForProfile, UploadMidlleware.stockUserDocument, UserController.updateProfilePicOfUserPosts );
 
 
 module.exports = router;

@@ -9,13 +9,7 @@ const userSchema = mongoose.Schema({
   age: Number,
   favoriteChar: String,
   description: String,
- 
-
-
-  
- pictureUrl:[String,],
-  
-  
+  pictureUrl: [{}],
 });
 
 const UserModel = mongoose.model("user", userSchema);

@@ -16,7 +16,7 @@ const post = {
   }, */
 
   createPost(req, res, next) {
-    let { title, content } = req.body;
+    let { title, content , authorProfilePicture} = req.body;
     if ((!title, !content)) {
       return res.status(400).send({ error: "Bad Request" });
     }
@@ -54,7 +54,8 @@ const post = {
       new Date(date)
     );
     console.log(typeof nbOfDaysOrHours);
-
+    let picture = req.user.pictureUrl;
+    console.log(picture,'log de picture');
     return PostModel.create({
       title: title,
       content: content,
@@ -62,9 +63,12 @@ const post = {
       time: time,
       betwenn: nbOfDaysOrHours,
       author: req.user.userName,
+      authorProfilePicture: authorProfilePicture,
     })
       .then(() => {
-        res.status(200).send({ success: true, message: " Votre post à été créer" });
+        res
+          .status(200)
+          .send({ success: true, message: " Votre post à été créer" });
       })
       .catch((err) => handleServerError(err, res));
   },
