@@ -25,7 +25,7 @@ router.get("/check-token", Auth.isUser, UserController.getInfos);
 
 router.get("/display-all-post", Post.showAllPosts);
 router.post("/post-by-user", Auth.isUser, Post.createPost);
-router.put("/like-post", Auth.isUser, Post.toggleLike);
+router.put("/like", Auth.isUser, Post.toggleLike);
 
 router.put("/edit-user-description", Auth.isUser,UserController.editProfil)
 

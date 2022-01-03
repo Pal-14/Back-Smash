@@ -3,24 +3,23 @@ const multer = require("multer");
 const UserModel = require("../models/userModel");
 
 const publicFolderStorage = multer.diskStorage({
-    destination: "./public/uploads",
-    filename: function (req, file, cb) {
-      let myFileName =
-        file.fieldname +
-        "$" +
-        req.user._id +
-        "$" +
-        Date.now() +
-        path.extname(file.originalname);
-      if (!req.myArray) {
-        req.myArray = [myFileName];
-      } else {
-        req.myArray.push(myFileName);
-      }
-      cb(null, myFileName);
-    },
-  });
-  
+  destination: "./public/uploads",
+  filename: function (req, file, cb) {
+    let myFileName =
+      file.fieldname +
+      "$" +
+      req.user._id +
+      "$" +
+      Date.now() +
+      path.extname(file.originalname);
+    if (!req.myArray) {
+      req.myArray = [myFileName];
+    } else {
+      req.myArray.push(myFileName);
+    }
+    cb(null, myFileName);
+  },
+});
 
 function checkFileTypeForPics(file, cb) {
   const filetypes = /jpg|jpeg|png/;
@@ -59,7 +58,6 @@ const UploadMidlleware = {
   },
   stockUserDocument(req, res, next) {
     const myArray = req.myArray;
-    console.log(req.myArray, "array");
     if (!myArray) {
       return res.status(400).send({
         success: false,
@@ -69,9 +67,9 @@ const UploadMidlleware = {
     return UserModel.findOneAndUpdate(
       { _id: req.user._id },
       {
-      $push: {
-        pictureUrl: myArray,
-      },
+        $push: {
+          pictureUrl: myArray,
+        },
       }
     )
       .then(() => {
@@ -79,8 +77,8 @@ const UploadMidlleware = {
           success: true,
           message: "Votre photo à bien été enregistrée.",
         });
-       next();
-      }) 
+        next();
+      })
       .catch((err) => {
         res.status(400).send({
           success: false,

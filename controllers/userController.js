@@ -22,8 +22,8 @@ function readToken(req) {
 }
 
 const UserController = {
-    logBody(req, res, next) {
-    console.log(req,'req.body');
+  logBody(req, res, next) {
+    console.log(req, "req.body");
     next();
   },
 
@@ -84,7 +84,7 @@ const UserController = {
         }
         return res.status(400).send({
           success: false,
-          message: "Email déjà utilisé"
+          message: "Email déjà utilisé",
         });
       })
       .catch((err) => handleServerError(err, res));
@@ -97,7 +97,7 @@ const UserController = {
 
     //si pas toutes les infos => renvoie 400
     if (!email || !password) {
-     return res.status(400).send({
+      return res.status(400).send({
         success: false,
         message: "Merci de remplir tout les champs",
       });
@@ -106,7 +106,8 @@ const UserController = {
       .then((user) => {
         if (user === null) {
           return res
-            .status(403).send({ success: false, message: "Informations incorrectes" });
+            .status(403)
+            .send({ success: false, message: "Informations incorrectes" });
         }
         let passwordDoMatch = bcrypt.compareSync(password, user.password);
         if (!passwordDoMatch) {
@@ -128,8 +129,8 @@ const UserController = {
               message: "Connecté avec succés",
             });
           }
-          );
-        })
+        );
+      })
 
       .catch((err) => handleServerError(err, res));
   },
@@ -148,11 +149,8 @@ const UserController = {
       .send({ success: true, message: "Infos utilisateur", data: req.user });
   },
 
- 
-
   updateProfilePicOfUserPosts(req, res, next) {
     let newProfilePic = req.myArray[0];
-    console.log(newProfilePic, "log new profile pic");
     if (!newProfilePic) {
       return res.status(400).send({
         success: false,
@@ -182,8 +180,15 @@ const UserController = {
   },
 
   editProfil(req, res, next) {
-    let { userName, firstName, lastName, age, favoriteChar, description,pictureUrl } =
-      req.body;
+    let {
+      userName,
+      firstName,
+      lastName,
+      age,
+      favoriteChar,
+      description,
+      pictureUrl,
+    } = req.body;
     if (!description) {
       return res.status(400).send({
         success: false,

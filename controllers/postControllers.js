@@ -16,7 +16,7 @@ const post = {
   }, */
 
   createPost(req, res, next) {
-    let { title, content , authorProfilePicture} = req.body;
+    let { title, content, authorProfilePicture } = req.body;
     if ((!title, !content)) {
       return res.status(400).send({ error: "Bad Request" });
     }
@@ -38,7 +38,6 @@ const post = {
       ("0" + d.getMinutes()).slice(-2) +
       ":" +
       ("0" + d.getSeconds()).slice(-2);
-    console.log(date);
 
     // Const pour avoir seulement le format Heures/Minutes/Secondes
     const t = new Date();
@@ -53,9 +52,7 @@ const post = {
       new Date(Date.now()),
       new Date(date)
     );
-    console.log(typeof nbOfDaysOrHours);
     let picture = req.user.pictureUrl;
-    console.log(picture,'log de picture');
     return PostModel.create({
       title: title,
       content: content,
@@ -97,13 +94,11 @@ const post = {
   },
 
   toggleLike(req, res, next) {
-    console.log(req.body);
-    let userId = req.body.user;
+    let userId = req.user._id;
     let postId = req.body.post;
 
     PostModel.findOne({ _id: postId })
       .then((response) => {
-        console.log(response);
         if (!response) {
           return res.status(404).send("Aucun post correspondant");
         }
@@ -112,14 +107,12 @@ const post = {
         if (!postHasUser) {
           PostModel.updateOne({ _id: postId }, { $push: { likes: userId } })
             .then((response2) => {
-              console.log(response2);
               return res.send("Vous avez liké");
             })
             .catch((err) => handleServerError(err, res));
         } else {
           PostModel.updateOne({ _id: postId }, { $pull: { likes: userId } })
             .then((response3) => {
-              console.log(response3);
               return res.send("Votre like à été supprimé");
             })
             .catch((err) => handleServerError(err, res));
