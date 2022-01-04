@@ -30,18 +30,18 @@ const post = {
       ("0" + (d.getMonth() + 1)).slice(-2) +
       " /" +
       d.getFullYear() +
-      " " +
+      " "/*  +
       "à" +
       ":" +
       d.getHours() +
       ":" +
       ("0" + d.getMinutes()).slice(-2) +
       ":" +
-      ("0" + d.getSeconds()).slice(-2);
+      ("0" + d.getSeconds()).slice(-2) */;
 
     // Const pour avoir seulement le format Heures/Minutes/Secondes
     const t = new Date();
-    const time = t.getHours() + ":" + t.getMinutes() + ":" + t.getSeconds();
+    const time = t.getHours() + ":" +("0" + t.getMinutes()).slice(-2) + ":" + ("0" + t.getSeconds()).slice(-2);
     console.log(time);
 
     function daysOrHoursBetweenPosts(firstDate, secondDate) {
